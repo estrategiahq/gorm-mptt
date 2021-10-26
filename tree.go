@@ -4,7 +4,8 @@ import "gorm.io/gorm"
 
 type Tree gorm.DB
 
-func New(db interface{}) Tree {
+func New(db *gorm.DB) *Tree {
 
-	return db.(Tree)
+	t := Tree(*db)
+	return &t
 }
