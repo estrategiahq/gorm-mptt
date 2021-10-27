@@ -7,11 +7,11 @@ import (
 
 func (db *Tree) GetNode(o interface{}) interface{} {
 	rv := reflect.ValueOf(o)
-	id := rv.FieldByName("ID")
+	rv_id := rv.FieldByName("ID")
 
-	// var id string
-	// id = rv_id.(string)
-	db.Statement.First(&o, "id = ?", fmt.Sprintf("%s", id))
+	id := fmt.Sprintf("%s", rv_id)
+
+	db.Statement.First(&o, "id = ?", id)
 	return o
 
 }
