@@ -6,7 +6,7 @@ import (
 )
 
 func (db *Tree) GetNode(o interface{}) interface{} {
-	rv := reflect.ValueOf(&o)
+	rv := reflect.ValueOf(o)
 	id := rv.FieldByName("ID")
 
 	// var id string
