@@ -1,6 +1,9 @@
 package gorm_mptt
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 func (db *Tree) GetNode(o interface{}) interface{} {
 	rv := reflect.ValueOf(&o)
@@ -8,7 +11,7 @@ func (db *Tree) GetNode(o interface{}) interface{} {
 
 	// var id string
 	// id = rv_id.(string)
-	db.Statement.Where("id = ?", id).First(&o)
+	db.Statement.First(&o, "id = ?", fmt.Sprintf("%s", id))
 	return o
 
 }
