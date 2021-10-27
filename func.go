@@ -4,9 +4,9 @@ import "reflect"
 
 func (db *Tree) GetNode(o interface{}) interface{} {
 	rv := reflect.ValueOf(o)
-	rv_id := rv.FieldByName("ID").Interface()
-	var id string
-	id = rv_id.(string)
+	id := rv.FieldByName("ID").Elem().String()
+	// var id string
+	// id = rv_id.(string)
 	db.Statement.Where("id = ?", id).First(&o)
 	return o
 
