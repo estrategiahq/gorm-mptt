@@ -7,7 +7,7 @@ func (db *Tree) GetNode(o interface{}) interface{} {
 	rv_id := rv.FieldByName("ID").String()
 	var id string
 	id = string(rv_id)
-	db.Statement.First(&o, "id = ?", id)
+	db.Statement.Where("id = ?", id).First(&o)
 	return o
 
 }
