@@ -9,8 +9,9 @@ func (db *Tree) GetNode(o interface{}) interface{} {
 	rv := reflect.ValueOf(o)
 	rv_id := rv.FieldByName("ID")
 
-	id := fmt.Sprintf("%s", rv_id)
-
+	var id string
+	id = fmt.Sprintf("%s", rv_id)
+	fmt.Println(id)
 	db.Statement.First(&o, "id = ?", id)
 	return o
 
