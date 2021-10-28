@@ -1,7 +1,7 @@
 package gorm_mptt
 
 func (db *Tree) GetNode(o interface{}, id string) interface{} {
-	db.Statement.First(&o, map[string]interface{}{"id": id})
+	db.Statement.First(&o, "id = ?", id)
 	return o
 }
 
