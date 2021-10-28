@@ -7,7 +7,7 @@ import (
 
 func (db *Tree) GetNode(o interface{}) interface{} {
 	rv := reflect.ValueOf(o)
-	rv_id := rv.FieldByName("ID")
+	rv_id := rv.FieldByName("ID").String()
 
 	var id string
 	id = fmt.Sprintf("%s", rv_id)
