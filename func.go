@@ -5,7 +5,7 @@ import (
 )
 
 func (db *Tree) GetNode(o interface{}) interface{} {
-	rv := reflect.ValueOf(o)
+	rv := reflect.ValueOf(o).Elem()
 	id := rv.FieldByName("ID").String()
 
 	db.Statement.First(&o, map[string]interface{}{"id": id})
