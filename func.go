@@ -12,7 +12,7 @@ func (db *Tree) GetNode(o interface{}) interface{} {
 	var id string
 	id = fmt.Sprintf("%s", rv_id)
 	fmt.Println(id)
-	db.Statement.First(&o, "id = ?", &id)
+	db.Statement.First(&o, map[string]interface{}{"id": id})
 	return o
 
 }
