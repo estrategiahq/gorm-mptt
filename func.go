@@ -38,6 +38,8 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 
 	for _, v := range fields {
 
+		fmt.Println(v, "<<<<<")
+
 		where := fmt.Sprintf("%s %s", v, conditions)
 
 		db.Statement.Update(v, gorm.Expr("? ? ?", v, dir, shift)).Model(o).Where(where)
