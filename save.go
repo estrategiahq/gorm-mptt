@@ -14,7 +14,7 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	fmt.Println(id)
 	fmt.Println(parent_id)
 
-	if !id.IsValid() && parent_id.IsValid() {
+	if !id.IsValid() && !parent_id.IsValid() {
 
 		fmt.Println("Novo, level: 0")
 		edge := db.getMax(o)
