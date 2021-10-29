@@ -3,6 +3,8 @@ package gorm_mptt
 import (
 	"fmt"
 	"reflect"
+
+	"gorm.io/gorm"
 )
 
 func (db *Tree) getNodeById(o interface{}) interface{} {
@@ -38,7 +40,9 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 
 		where := fmt.Sprintf("%s %s", v, conditions)
 
-		db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
+		// gorm.Expr("? ? ?", v, dir, shift)
+		db.Statement.DB.Model(o).UpdateColumn(v, gorm.Expr("? ? ?", v, dir, shift)).Where(where)
+		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
 
 }
