@@ -14,7 +14,7 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	fmt.Println("ID:", id)
 	fmt.Println("ParentId:", parent_id)
 
-	if !id.IsValid() && !parent_id.IsValid() {
+	if id.IsZero() && parent_id.IsZero() {
 
 		fmt.Println("Novo, level: 0")
 		edge := db.getMax(o)
@@ -22,7 +22,7 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
 		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
 	}
-	if !id.IsValid() && parent_id.IsValid() {
+	if id.IsZero() && !parent_id.IsZero() {
 		fmt.Println("Novo, level <> 0")
 
 		parent := db.getNodeByParentId(o)
