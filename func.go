@@ -22,7 +22,7 @@ func (db *Tree) getNodeByParentId(o interface{}) interface{} {
 }
 
 func (db *Tree) GetMax(o interface{}) int {
-	var rght int
+	var rght *int
 	db.Statement.Select("rght").Model(o).Order("rght desc").Scan(rght)
-	return rght
+	return *rght
 }
