@@ -1,6 +1,9 @@
 package gorm_mptt
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	rv := reflect.ValueOf(o).Elem()
@@ -8,13 +11,20 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	id := rv.FieldByName("ID").String()
 	parent_id := rv.FieldByName("ParentId").String()
 
+	fmt.Println(id)
+	fmt.Println(parent_id)
+
 	if id == "" && parent_id == "" {
+
+		fmt.Println("Novo, level: 0")
 		edge := db.getMax(o)
 
 		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
 		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
 	}
 	if id == "" && parent_id != "" {
+		fmt.Println("Novo, level <> 0")
+
 		parent := db.getNodeByParentId(o)
 		parent_rv := reflect.ValueOf(parent).Elem()
 
