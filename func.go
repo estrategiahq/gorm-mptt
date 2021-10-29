@@ -1,6 +1,7 @@
 package gorm_mptt
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -25,4 +26,20 @@ func (db *Tree) getMax(o interface{}) int {
 	var rght int
 	db.Statement.Select("rght").Model(o).Order("rght desc").Scan(&rght)
 	return rght
+}
+
+func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
+	fields := map[int]string{
+		0: "lft",
+		1: "rght",
+	}
+
+	for _, v := range fields {
+		exp := fmt.Sprintf("%s %s %d", v, dir, shift)
+
+		where := fmt.Sprintf("%s %s", v, conditions)
+
+		db.Statement.Update(v, exp).Model(o).Where(where)
+	}
+
 }
