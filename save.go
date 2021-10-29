@@ -5,16 +5,16 @@ import "reflect"
 func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	rv := reflect.ValueOf(o).Elem()
 
-	id := rv.FieldByName("ID")
-	parent_id := rv.FieldByName("ParentId")
+	id := rv.FieldByName("ID").String()
+	parent_id := rv.FieldByName("ParentId").String()
 
-	if id.IsNil() && parent_id.IsNil() {
+	if id == "" && parent_id == "" {
 		edge := db.getMax(o)
 
 		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
 		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
 	}
-	if id.IsNil() && !parent_id.IsNil() {
+	if id == "" && parent_id != "" {
 		parent := db.getNodeByParentId(o)
 		parent_rv := reflect.ValueOf(parent).Elem()
 
