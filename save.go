@@ -8,13 +8,13 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
 
-	if id.IsZero() && parent_id.IsZero() {
+	if id.IsNil() && parent_id.IsNil() {
 		edge := db.getMax(o)
 
 		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
 		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
 	}
-	if id.IsZero() && !parent_id.IsZero() {
+	if id.IsNil() && !parent_id.IsNil() {
 		parent := db.getNodeByParentId(o)
 		parent_rv := reflect.ValueOf(parent).Elem()
 
