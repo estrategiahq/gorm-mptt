@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func (db *Tree) GetNode(o interface{}) interface{} {
+func (db *Tree) getNodeById(o interface{}) interface{} {
 	rv := reflect.ValueOf(o).Elem()
 	id := rv.FieldByName("ID").String()
 
@@ -12,7 +12,17 @@ func (db *Tree) GetNode(o interface{}) interface{} {
 	return o
 
 }
+func (db *Tree) getNodeByParentId(o interface{}) interface{} {
+	rv := reflect.ValueOf(o).Elem()
+	parent_id := rv.FieldByName("Parent_id").String()
 
-func (db *Tree) getMax(o interface{}) (interface{}, error) {
-	return o, nil
+	db.Statement.First(&o, map[string]interface{}{"id": parent_id})
+	return o
+
+}
+
+func (db *Tree) GetMax(o interface{}) int {
+	var rght int
+	db.Statement.Select("rght").Model(o).Order("rght desc").Scan(rght)
+	return rght
 }
