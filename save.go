@@ -11,8 +11,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
 
-	fmt.Println(id)
-	fmt.Println(parent_id)
+	fmt.Println("ID:", id)
+	fmt.Println("ParentId:", parent_id)
 
 	if !id.IsValid() && !parent_id.IsValid() {
 
