@@ -37,12 +37,12 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 	}
 
 	for _, v := range fields {
-		// exp := fmt.Sprintf("%s %s %d", v, dir, shift)
+		exp := fmt.Sprintf("%s %s ?", v, dir)
 		where := fmt.Sprintf("%s %s", v, conditions)
 
 		// gorm.Expr("? ? ?", v, dir, shift)
 
-		db.Statement.DB.Model(o).Update(v, gorm.Expr("? + ?", v, shift)).Where(where)
+		db.Statement.DB.Model(o).Update(v, gorm.Expr(exp, shift)).Where(where)
 		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
 
