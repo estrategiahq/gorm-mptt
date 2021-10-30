@@ -8,10 +8,11 @@ import (
 func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	fmt.Printf("save inicial: %+v", o)
 
-	rv := reflect.ValueOf(o).Elem()
+	r := reflect.ValueOf(o)
+	rv := r.Elem()
 	original := reflect.New(reflect.TypeOf(o))
 
-	reflect.Copy(original, rv)
+	reflect.Copy(original, r)
 
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
