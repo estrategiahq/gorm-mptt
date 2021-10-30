@@ -36,7 +36,7 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 		1: "rght",
 	}
 
-	newObj := reflect.New(reflect.TypeOf(o))
+	newObj := reflect.New(reflect.TypeOf(o)).Interface()
 
 	for _, v := range fields {
 		exp := fmt.Sprintf("%s %s ?", v, dir)
@@ -44,7 +44,7 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 
 		// gorm.Expr("? ? ?", v, dir, shift)
 
-		db.Statement.DB.Model(newObj).Where(where).Update(v, gorm.Expr(exp, shift))
+		db.Statement.DB.Model(&newObj).Where(where).Update(v, gorm.Expr(exp, shift))
 		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
 
