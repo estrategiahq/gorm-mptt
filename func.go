@@ -31,6 +31,7 @@ func (db *Tree) getMax(o interface{}) int {
 }
 
 func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
+	fmt.Printf("sync: %+v", o)
 	fields := map[int]string{
 		0: "lft",
 		1: "rght",
@@ -47,5 +48,5 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 		db.Statement.DB.Model(&newObj).Where(where).Update(v, gorm.Expr(exp, shift))
 		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
-
+	fmt.Printf("sync update: %+v", o)
 }
