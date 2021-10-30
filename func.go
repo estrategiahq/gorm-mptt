@@ -42,7 +42,7 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 
 		// gorm.Expr("? ? ?", v, dir, shift)
 
-		db.Statement.DB.Model(o).Update(v, gorm.Expr(exp, shift)).Where(where)
+		db.Statement.DB.Update(v, gorm.Expr(exp, shift)).Where(where).Model(o)
 		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
 
