@@ -7,7 +7,11 @@ import (
 
 func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	fmt.Printf("save inicial: %+v", o)
+
 	rv := reflect.ValueOf(o).Elem()
+	original := reflect.New(reflect.TypeOf(o))
+
+	reflect.Copy(original, rv)
 
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
@@ -32,8 +36,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 		db.sync(o, 2, "+", cond)
 	}
 
-	fmt.Printf("save antes de salvar: %+v", o)
+	fmt.Printf("save antes de salvar: %+v", original)
 
-	err := db.Statement.Create(o).Error
+	err := db.Statement.Create(original.Interface()).Error
 	return o, err
 }
