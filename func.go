@@ -8,7 +8,8 @@ import (
 )
 
 func (db *Tree) getNodeById(o interface{}) interface{} {
-	rv := reflect.ValueOf(o).Elem()
+	// rv := reflect.ValueOf(o).Elem()
+	rv := reflect.ValueOf(o)
 	id := rv.FieldByName("ID").String()
 
 	db.Statement.First(&o, map[string]interface{}{"id": id})
@@ -16,7 +17,8 @@ func (db *Tree) getNodeById(o interface{}) interface{} {
 
 }
 func (db *Tree) getNodeByParentId(o interface{}) interface{} {
-	rv := reflect.ValueOf(o).Elem()
+	// rv := reflect.ValueOf(o).Elem()
+	rv := reflect.ValueOf(o)
 	parent_id := rv.FieldByName("ParentId").String()
 
 	db.Statement.First(&o, map[string]interface{}{"id": parent_id})
@@ -26,7 +28,7 @@ func (db *Tree) getNodeByParentId(o interface{}) interface{} {
 
 func (db *Tree) getMax(o interface{}) int {
 	var rght int
-	db.Statement.Select("rght").Model(o).Order("rght desc").Scan(&rght)
+	db.Statement.Select("rght").Model(&o).Order("rght desc").Scan(&rght)
 	return rght
 }
 
