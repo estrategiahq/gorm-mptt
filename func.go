@@ -12,8 +12,10 @@ func (db *Tree) getNodeById(o interface{}) interface{} {
 	rv := reflect.ValueOf(o)
 	id := rv.FieldByName("ID").String()
 
-	db.Statement.First(&o, map[string]interface{}{"id": id})
-	return o
+	newObj := reflect.New(reflect.TypeOf(o)).Interface()
+
+	db.Statement.First(&newObj, map[string]interface{}{"id": id})
+	return newObj
 
 }
 func (db *Tree) getNodeByParentId(o interface{}) interface{} {

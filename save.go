@@ -28,8 +28,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 		edge := parent_rv.FieldByName("Rght").Int()
 
-		rv.FieldByName("Lft").SetInt(edge)
-		rv.FieldByName("Rght").SetInt(edge + 1)
+		rv.Elem().FieldByName("Lft").SetInt(edge)
+		rv.Elem().FieldByName("Rght").SetInt(edge + 1)
 
 		cond := fmt.Sprintf(">= %d", edge)
 
