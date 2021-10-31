@@ -11,7 +11,7 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	r := reflect.ValueOf(o)
 	rv := r.Elem()
 	original := reflect.New(reflect.TypeOf(o))
-	original.Elem().Set(r)
+	original.Elem().Set(rv)
 
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
