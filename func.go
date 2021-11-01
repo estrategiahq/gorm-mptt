@@ -9,7 +9,7 @@ import (
 
 func (db *Tree) getNodeById(o interface{}) interface{} {
 	// rv := reflect.ValueOf(o).Elem()
-	rv := reflect.ValueOf(o)
+	rv := reflect.ValueOf(o).Elem()
 	id := rv.FieldByName("ID").String()
 
 	newObj := reflect.New(reflect.TypeOf(o)).Interface()
@@ -20,7 +20,7 @@ func (db *Tree) getNodeById(o interface{}) interface{} {
 }
 func (db *Tree) getNodeByParentId(o interface{}) interface{} {
 	// rv := reflect.ValueOf(o).Elem()
-	rv := reflect.ValueOf(o)
+	rv := reflect.ValueOf(o).Elem()
 	parent_id := rv.FieldByName("ParentId").String()
 
 	newObj := reflect.New(reflect.TypeOf(o)).Interface()
