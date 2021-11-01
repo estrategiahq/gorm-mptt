@@ -32,7 +32,7 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	}
 	if id.IsZero() && !parent_id.IsZero() {
 		parent := db.getNodeByParentId(o)
-		parent_rv := reflect.ValueOf(parent).Elem()
+		parent_rv := reflect.ValueOf(parent)
 
 		edge := parent_rv.FieldByName("Rght").Int()
 
