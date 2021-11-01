@@ -5,22 +5,21 @@ import (
 	"reflect"
 )
 
-func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
-	fmt.Printf("save inicial: %+v", o)
+func (db *Tree) SaveNode(n interface{}) (interface{}, error) {
 
-	rv := reflect.ValueOf(o).Elem()
+	rv := reflect.ValueOf(n).Elem()
 
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
 
 	if id.IsZero() && parent_id.IsZero() {
-		edge := db.getMax(o)
+		edge := db.getMax(n)
 
 		rv.FieldByName("Lft").SetInt(edge + 1)
 		rv.FieldByName("Rght").SetInt(edge + 2)
 	}
 	if id.IsZero() && !parent_id.IsZero() {
-		parent := db.getNodeByParentId(o)
+		parent := db.getNodeByParentId(n)
 
 		edge := int64(parent["rght"].(int))
 
@@ -29,11 +28,9 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 		cond := fmt.Sprintf(">= %d", edge)
 
-		db.sync(o, 2, "+", cond)
+		db.sync(n, 2, "+", cond)
 	}
 
-	fmt.Printf("save antes de salvar: %+v", o)
-
-	err := db.Statement.Create(o).Error
-	return o, err
+	err := db.Statement.Create(n).Error
+	return n, err
 }
