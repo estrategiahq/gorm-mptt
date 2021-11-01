@@ -7,29 +7,25 @@ import (
 	"gorm.io/gorm"
 )
 
-func (db *Tree) getNodeById(o interface{}) interface{} {
-	// rv := reflect.ValueOf(o).Elem()
+func (db *Tree) getNodeById(o interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(o).Elem()
 	id := rv.FieldByName("ID").String()
 
-	newObj := reflect.New(reflect.TypeOf(o)).Interface()
+	result := map[string]interface{}{}
 
-	db.Statement.First(&newObj, map[string]interface{}{"id": id})
-	return newObj
+	db.Statement.DB.Model(o).First(&result, map[string]interface{}{"id": id})
+	return result
 
 }
-func (db *Tree) getNodeByParentId(o interface{}) interface{} {
-	// rv := reflect.ValueOf(o).Elem()
+func (db *Tree) getNodeByParentId(o interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(o).Elem()
 	parent_id := rv.FieldByName("ParentId").String()
 
-	newObj := reflect.New(reflect.TypeOf(o))
+	result := map[string]interface{}{}
 
-	db.Statement.DB.Model(o).First(newObj, map[string]interface{}{"id": parent_id})
+	db.Statement.DB.Model(o).First(result, map[string]interface{}{"id": parent_id})
 
-	fmt.Printf("%+v \n", newObj)
-	fmt.Printf("%+v \n", o)
-	return newObj
+	return result
 
 }
 
@@ -46,7 +42,7 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 		1: "rght",
 	}
 
-	newObj := reflect.New(reflect.TypeOf(o)).Interface()
+	// newObj := reflect.New(reflect.TypeOf(o)).Interface()
 
 	for _, v := range fields {
 		exp := fmt.Sprintf("%s %s ?", v, dir)
@@ -54,7 +50,7 @@ func (db *Tree) sync(o interface{}, shift int, dir, conditions string) {
 
 		// gorm.Expr("? ? ?", v, dir, shift)
 
-		db.Statement.DB.Model(&newObj).Where(where).Update(v, gorm.Expr(exp, shift))
+		db.Statement.DB.Model(o).Where(where).Update(v, gorm.Expr(exp, shift))
 		// db.Statement.UpdateColumn(v, 2).Where(where).Model(&o)
 	}
 	fmt.Printf("sync update: %+v", o)

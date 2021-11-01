@@ -10,17 +10,6 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 	rv := reflect.ValueOf(o).Elem()
 
-	// typeof := reflect.New(reflect.TypeOf(o))
-	// model := typeof.Interface()
-	// toSave := typeof.Elem()
-
-	// toSave.Set(rv)
-
-	// rvp := reflect.ValueOf(&o).Elem()
-	// rv := r.Elem()
-	// original := reflect.New(reflect.TypeOf(o))
-	// original.Elem().Set(rv)
-
 	id := rv.FieldByName("ID")
 	parent_id := rv.FieldByName("ParentId")
 
@@ -32,9 +21,9 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	}
 	if id.IsZero() && !parent_id.IsZero() {
 		parent := db.getNodeByParentId(o)
-		parent_rv := reflect.ValueOf(parent)
+		// parent_rv := reflect.ValueOf(parent)
 
-		edge := parent_rv.FieldByName("Rght").Int()
+		edge := parent["Rght"].(int64)
 
 		rv.FieldByName("Lft").SetInt(edge)
 		rv.FieldByName("Rght").SetInt(edge + 1)
