@@ -29,9 +29,9 @@ func (db *Tree) getNodeByParentId(o interface{}) map[string]interface{} {
 
 }
 
-func (db *Tree) getMax(o interface{}) int {
-	var rght int
-	db.Statement.Select("rght").Model(&o).Order("rght desc").Scan(&rght)
+func (db *Tree) getMax(o interface{}) int64 {
+	var rght int64
+	db.Statement.Select("rght").Model(&o).Order("rght desc").Limit(1).Scan(&rght)
 	return rght
 }
 

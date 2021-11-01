@@ -16,8 +16,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	if id.IsZero() && parent_id.IsZero() {
 		edge := db.getMax(o)
 
-		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
-		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
+		rv.FieldByName("Lft").SetInt(edge + 1)
+		rv.FieldByName("Rght").SetInt(edge + 2)
 	}
 	if id.IsZero() && !parent_id.IsZero() {
 		parent := db.getNodeByParentId(o)
