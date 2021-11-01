@@ -21,11 +21,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	}
 	if id.IsZero() && !parent_id.IsZero() {
 		parent := db.getNodeByParentId(o)
-		// parent_rv := reflect.ValueOf(parent)
 
-		fmt.Printf("%+v", parent)
-
-		edge := parent["Rght"].(int64)
+		edge := parent["rght"].(int64)
 
 		rv.FieldByName("Lft").SetInt(edge)
 		rv.FieldByName("Rght").SetInt(edge + 1)
