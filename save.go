@@ -10,7 +10,9 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 	rv := reflect.ValueOf(o)
 
-	toSave := reflect.New(reflect.TypeOf(o)).Elem()
+	typeof := reflect.New(reflect.TypeOf(o))
+	model := typeof.Interface()
+	toSave := typeof.Elem()
 
 	toSave.Set(rv)
 
@@ -44,6 +46,6 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 	fmt.Printf("save antes de salvar: %+v", o)
 
-	err := db.Statement.DB.Model(&o).Create(toSave).Error
+	err := db.Statement.DB.Model(&model).Create(toSave).Error
 	return toSave, err
 }
