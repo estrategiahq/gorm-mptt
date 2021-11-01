@@ -27,7 +27,8 @@ func (db *Tree) getNodeByParentId(o interface{}) interface{} {
 
 	db.Statement.DB.Model(o).First(&newObj, map[string]interface{}{"id": parent_id})
 
-	fmt.Printf("%+v", newObj.Interface())
+	fmt.Printf("%+v \n", newObj)
+	fmt.Printf("%+v \n", o)
 	return newObj
 
 }
