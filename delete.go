@@ -9,10 +9,14 @@ func (db *Tree) DeleteNode(n interface{}) error {
 	rght := node["rght"].(int)
 	diff := rght - lft + 1
 
+	//delete children
 	if diff > 2 {
 		result := map[string]interface{}{}
 		err = db.Statement.DB.Model(n).Where("lft BETWEEN ? AND ?", (lft + 1), (rght - 1)).Delete(&result).Error
 	}
+
+	//delete node
+	err = db.Statement.DB.Delete(n).Error
 
 	cond := fmt.Sprintf("> %d", rght)
 
