@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-func (db *Tree) SaveNode(n interface{}) (interface{}, error) {
+func (db *Tree) CreateNode(n interface{}) error {
 
 	rv := reflect.ValueOf(n).Elem()
 
@@ -32,5 +32,5 @@ func (db *Tree) SaveNode(n interface{}) (interface{}, error) {
 	}
 
 	err := db.Statement.Create(n).Error
-	return n, err
+	return err
 }
