@@ -23,7 +23,7 @@ func (db *Tree) getNodeByParentId(o interface{}) interface{} {
 	rv := reflect.ValueOf(o).Elem()
 	parent_id := rv.FieldByName("ParentId").String()
 
-	newObj := reflect.New(reflect.TypeOf(o)).Interface()
+	newObj := reflect.New(reflect.TypeOf(o))
 
 	db.Statement.First(&newObj, map[string]interface{}{"id": parent_id})
 	return newObj
