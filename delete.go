@@ -10,7 +10,8 @@ func (db *Tree) DeleteNode(n interface{}) error {
 	diff := rght - lft + 1
 
 	if diff > 2 {
-		err = db.Statement.DB.Where("lft BETWEEN ? AND ?", (lft + 1), (rght - 1)).Delete(n).Error
+		result := map[string]interface{}{}
+		err = db.Statement.DB.Model(n).Where("lft BETWEEN ? AND ?", (lft + 1), (rght - 1)).Delete(&result).Error
 	}
 
 	cond := fmt.Sprintf("> %d", rght)
