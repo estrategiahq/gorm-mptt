@@ -44,6 +44,6 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 	fmt.Printf("save antes de salvar: %+v", o)
 
-	err := db.Statement.Create(toSave).Error
+	err := db.Statement.DB.Model(o).Create(toSave).Error
 	return toSave, err
 }
