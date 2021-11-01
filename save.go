@@ -8,13 +8,13 @@ import (
 func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	fmt.Printf("save inicial: %+v", o)
 
-	rv := reflect.ValueOf(&o).Elem()
+	rv := reflect.ValueOf(o)
 
-	// typeof := reflect.New(reflect.TypeOf(o))
-	// model := typeof.Interface()
-	// toSave := typeof.Elem()
+	typeof := reflect.New(reflect.TypeOf(o))
+	model := typeof.Interface()
+	toSave := typeof.Elem()
 
-	// toSave.Set(rv)
+	toSave.Set(rv)
 
 	// rvp := reflect.ValueOf(&o).Elem()
 	// rv := r.Elem()
@@ -27,8 +27,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 	if id.IsZero() && parent_id.IsZero() {
 		edge := db.getMax(o)
 
-		rv.FieldByName("Lft").SetInt(int64(edge) + 1)
-		rv.FieldByName("Rght").SetInt(int64(edge) + 2)
+		toSave.FieldByName("Lft").SetInt(int64(edge) + 1)
+		toSave.FieldByName("Rght").SetInt(int64(edge) + 2)
 	}
 	if id.IsZero() && !parent_id.IsZero() {
 		parent := db.getNodeByParentId(o)
@@ -36,8 +36,8 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 		edge := parent_rv.FieldByName("Rght").Int()
 
-		rv.FieldByName("Lft").SetInt(edge)
-		rv.FieldByName("Rght").SetInt(edge + 1)
+		toSave.FieldByName("Lft").SetInt(edge)
+		toSave.FieldByName("Rght").SetInt(edge + 1)
 
 		cond := fmt.Sprintf(">= %d", edge)
 
@@ -46,6 +46,6 @@ func (db *Tree) SaveNode(o interface{}) (interface{}, error) {
 
 	fmt.Printf("save antes de salvar: %+v", o)
 
-	err := db.Statement.Create(&o).Error
-	return o, err
+	err := db.Statement.DB.Model(model).Create(toSave).Error
+	return toSave, err
 }
