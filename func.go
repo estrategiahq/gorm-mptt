@@ -36,6 +36,9 @@ func (db *Tree) getMax(n interface{}) int64 {
 }
 
 func (db *Tree) sync(n interface{}, shift int, dir, conditions string) {
+
+	node := reflect.New(reflect.TypeOf(n)).Interface()
+
 	fields := map[int]string{
 		0: "lft",
 		1: "rght",
@@ -45,6 +48,6 @@ func (db *Tree) sync(n interface{}, shift int, dir, conditions string) {
 		exp := fmt.Sprintf("%s %s ?", v, dir)
 		where := fmt.Sprintf("%s %s", v, conditions)
 
-		db.Statement.DB.Model(n).Select(v).Where(where).Update(v, gorm.Expr(exp, shift))
+		db.Statement.DB.Model(node).Select(v).Where(where).Update(v, gorm.Expr(exp, shift))
 	}
 }
