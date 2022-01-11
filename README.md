@@ -7,4 +7,4 @@ mptt plugin for gorm orm
 1. reparent
 1. scope
 1. add tree configuration
-
+1. level
