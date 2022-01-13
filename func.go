@@ -8,7 +8,14 @@ import (
 )
 
 func (db *Tree) getNodeById(n interface{}) map[string]interface{} {
-	rv := reflect.ValueOf(n).Elem()
+	kind := reflect.TypeOf(n).Kind()
+
+	rv := reflect.ValueOf(n)
+
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+	}
+
 	id := rv.FieldByName("ID").String()
 
 	result := map[string]interface{}{}
@@ -18,8 +25,15 @@ func (db *Tree) getNodeById(n interface{}) map[string]interface{} {
 
 }
 func (db *Tree) getNodeByParentId(n interface{}) map[string]interface{} {
-	rv := reflect.ValueOf(n).Elem()
-	parent_id := rv.FieldByName("ParentId").String()
+	kind := reflect.TypeOf(n).Kind()
+
+	rv := reflect.ValueOf(n)
+
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+	}
+
+	parent_id := rv.FieldByName("ParentId").Addr().Interface()
 
 	result := map[string]interface{}{}
 
@@ -35,26 +49,72 @@ func (db *Tree) getMax(n interface{}) int64 {
 	return rght
 }
 
-func (db *Tree) getLftFromParentNode(n interface{}, pos int) int64 {
-	rv := reflect.ValueOf(n).Elem()
-	parent_id := rv.FieldByName("ParentId").String()
+func (db *Tree) getLftFromTargetNode(n interface{}, pos int) int64 {
+	node := reflect.New(reflect.TypeOf(n)).Interface()
+
+	rv := reflect.ValueOf(n)
+
+	kind := reflect.TypeOf(n).Kind()
+
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+	}
+
 	node_lft := rv.FieldByName("Lft").Int()
 
 	var lft int64
 
-	query := db.Statement.DB.Model(n).Select("lft").
-		Where("parent_id IS ?", parent_id).
+	query := db.Statement.DB.Model(node).Select("lft").
+		// Where("parent_id IS NULL").
 		Where("rght < ?", node_lft).
-		Order("lft asc").
-		Limit(1)
+		Order("lft desc").
+		Limit(1).
+		Offset(pos - 1)
 
-	if pos > 0 {
-		query = query.Offset(pos - 1)
+	if rv.FieldByName("ParentId").IsNil() {
+		query = query.Where("parent_id IS NULL")
+	} else {
+		parent_id := rv.FieldByName("ParentId").Interface()
+		query = query.Where("parent_id = ?", parent_id)
 	}
 
-	query.Scan(lft)
+	query.Scan(&lft)
 
 	return lft
+}
+
+func (db *Tree) getRghtFromTargetNode(n interface{}, pos int) int64 {
+	node := reflect.New(reflect.TypeOf(n)).Interface()
+
+	rv := reflect.ValueOf(n)
+
+	kind := reflect.TypeOf(n).Kind()
+
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+	}
+
+	node_rght := rv.FieldByName("Rght").Int()
+
+	var rght int64
+
+	query := db.Statement.DB.Model(node).Select("rght").
+		// Where("parent_id IS NULL").
+		Where("lft > ?", node_rght).
+		Order("lft asc").
+		Limit(1).
+		Offset(pos - 1)
+
+	if rv.FieldByName("ParentId").IsNil() {
+		query = query.Where("parent_id IS NULL")
+	} else {
+		parent_id := rv.FieldByName("ParentId").Interface()
+		query = query.Where("parent_id = ?", parent_id)
+	}
+
+	query.Scan(&rght)
+
+	return rght
 }
 
 func (db *Tree) sync(n interface{}, shift int, dir, conditions string) {

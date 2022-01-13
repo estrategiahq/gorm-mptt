@@ -6,10 +6,10 @@ import (
 	"reflect"
 )
 
-func (db *Tree) MoveUp(n interface{}, pos int) (bool, error) {
-	target_lft := db.getLftFromTargetNode(n, pos)
+func (db *Tree) MoveDown(n interface{}, pos int) (bool, error) {
+	target_rght := db.getRghtFromTargetNode(n, pos)
 
-	if target_lft == 0 {
+	if target_rght == 0 {
 		return false, errors.New("Can't locate the target node")
 	}
 
@@ -24,15 +24,15 @@ func (db *Tree) MoveUp(n interface{}, pos int) (bool, error) {
 	node_right := rv.FieldByName("Rght").Int()
 
 	edge := db.getMax(n)
-	leftBoundary := target_lft
-	rightBoundary := node_lft - 1
+	leftBoundary := node_right + 1
+	rightBoundary := target_rght
 
 	nodeToEdge := edge - node_lft + 1
 	shift := node_right - node_lft + 1
-	nodeToHole := edge - leftBoundary + 1
+	nodeToHole := edge - rightBoundary + shift
 
 	db.sync(n, int(nodeToEdge), "+", fmt.Sprintf("BETWEEN %d AND %d", node_lft, node_right))
-	db.sync(n, int(shift), "+", fmt.Sprintf("BETWEEN %d AND %d", leftBoundary, rightBoundary))
+	db.sync(n, int(shift), "-", fmt.Sprintf("BETWEEN %d AND %d", leftBoundary, rightBoundary))
 	db.sync(n, int(nodeToHole), "-", fmt.Sprintf("> %d", edge))
 
 	return true, nil
