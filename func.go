@@ -24,6 +24,25 @@ func (db *Tree) getNodeById(n interface{}) map[string]interface{} {
 	return result
 
 }
+
+func (db *Tree) getNodeByKey(n interface{}) map[string]interface{} {
+	kind := reflect.TypeOf(n).Kind()
+
+	rv := reflect.ValueOf(n)
+
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+	}
+
+	key := rv.FieldByName("Key").String()
+
+	result := map[string]interface{}{}
+
+	db.Statement.DB.Model(n).First(&result, map[string]interface{}{"key": key})
+	return result
+
+}
+
 func (db *Tree) getNodeByParentId(n interface{}) map[string]interface{} {
 	kind := reflect.TypeOf(n).Kind()
 

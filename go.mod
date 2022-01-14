@@ -1,4 +1,4 @@
-module github.com/golgher/gorm-mptt
+module github.com/estrategiahq/gorm-mptt
 
 go 1.17
 
