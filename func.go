@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (db *Tree) getNodeById(n interface{}) map[string]interface{} {
+func (db *Tree) getNodeById(n interface{}) (map[string]interface{}, error) {
 	kind := reflect.TypeOf(n).Kind()
 
 	rv := reflect.ValueOf(n)
@@ -20,8 +20,8 @@ func (db *Tree) getNodeById(n interface{}) map[string]interface{} {
 
 	result := map[string]interface{}{}
 
-	db.Statement.DB.Model(n).First(&result, map[string]interface{}{"id": id})
-	return result
+	err := db.Statement.DB.Model(n).First(&result, map[string]interface{}{"id": id}).Error
+	return result, err
 
 }
 

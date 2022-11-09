@@ -4,7 +4,10 @@ import "fmt"
 
 func (db *Tree) DeleteNode(n interface{}) error {
 	var err error
-	node := db.getNodeById(n)
+	node, err := db.getNodeById(n)
+	if err != nil {
+		return err
+	}
 	lft := node["lft"].(int)
 	rght := node["rght"].(int)
 	diff := rght - lft + 1
