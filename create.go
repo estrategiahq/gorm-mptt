@@ -31,6 +31,6 @@ func (db *Tree) CreateNode(n interface{}) error {
 		db.sync(n, 2, "+", cond)
 	}
 
-	err := db.Statement.Create(n).Error
+	err := db.Statement.Omit("id").Create(n).Error
 	return err
 }
