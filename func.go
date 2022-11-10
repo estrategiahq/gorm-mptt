@@ -43,7 +43,7 @@ func (db *Tree) getNodeByKey(n interface{}) map[string]interface{} {
 
 }
 
-func (db *Tree) getNodeByParentId(n interface{}) map[string]interface{} {
+func (db *Tree) getNodeByParentID(n interface{}) map[string]interface{} {
 	kind := reflect.TypeOf(n).Kind()
 
 	rv := reflect.ValueOf(n)
@@ -52,7 +52,7 @@ func (db *Tree) getNodeByParentId(n interface{}) map[string]interface{} {
 		rv = rv.Elem()
 	}
 
-	parent_id := rv.FieldByName("ParentId").Addr().Interface()
+	parent_id := rv.FieldByName("ParentID").Addr().Interface()
 
 	result := map[string]interface{}{}
 
@@ -90,10 +90,10 @@ func (db *Tree) getLftFromTargetNode(n interface{}, pos int) int64 {
 		Limit(1).
 		Offset(pos - 1)
 
-	if rv.FieldByName("ParentId").IsNil() {
+	if rv.FieldByName("ParentID").IsNil() {
 		query = query.Where("parent_id IS NULL")
 	} else {
-		parent_id := rv.FieldByName("ParentId").Interface()
+		parent_id := rv.FieldByName("ParentID").Interface()
 		query = query.Where("parent_id = ?", parent_id)
 	}
 
@@ -124,10 +124,10 @@ func (db *Tree) getRghtFromTargetNode(n interface{}, pos int) int64 {
 		Limit(1).
 		Offset(pos - 1)
 
-	if rv.FieldByName("ParentId").IsNil() {
+	if rv.FieldByName("ParentID").IsNil() {
 		query = query.Where("parent_id IS NULL")
 	} else {
-		parent_id := rv.FieldByName("ParentId").Interface()
+		parent_id := rv.FieldByName("ParentID").Interface()
 		query = query.Where("parent_id = ?", parent_id)
 	}
 

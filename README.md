@@ -22,16 +22,10 @@ A simple model example:
 ```golang 
 type Category struct {
 	ID          string         `gorm:"primaryKey;type:varchar(36)"`
-	ParentId    *string        `gorm:"default:null;index;type:varchar(36)"`
+	ParentID    *string        `gorm:"default:null;index;type:varchar(36)"`
 	Name        string         `gorm:"default:null;type:varchar(100)"`
 	Lft         int            `gorm:"index"`
 	Rght        int
-}
-
-func (c *Category) BeforeCreate(tx *gorm.DB) (err error) {
-	// UUID version 4
-	c.ID = uuid.NewString()
-	return
 }
 
 ```
@@ -68,14 +62,14 @@ t.CreateNode(&Parent)
 
 Child1 := entity.Category{
     Name:     "Child 1"
-    ParentId:    &Parent.ID,
+    ParentID:    &Parent.ID,
 }
 
 t.CreateNode(&Child1)
 
 Child2 := entity.Category{
     Name:     "Child 2"
-    ParentId:    &Parent.ID,
+    ParentID:    &Parent.ID,
 }
 
 t.CreateNode(&Child2)

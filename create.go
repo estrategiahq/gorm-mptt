@@ -7,19 +7,24 @@ import (
 
 func (db *Tree) CreateNode(n interface{}) error {
 
+	sql := db.Statement
 	rv := reflect.ValueOf(n).Elem()
 
 	id := rv.FieldByName("ID")
-	parent_id := rv.FieldByName("ParentId")
+	parent_id := rv.FieldByName("ParentID")
 
-	if id.IsZero() && parent_id.IsZero() {
+	if id.IsZero() {
+		sql.Omit("id")
+	}
+
+	if parent_id.IsZero() {
 		edge := db.getMax(n)
 
 		rv.FieldByName("Lft").SetInt(edge + 1)
 		rv.FieldByName("Rght").SetInt(edge + 2)
 	}
-	if id.IsZero() && !parent_id.IsZero() {
-		parent := db.getNodeByParentId(n)
+	if !parent_id.IsZero() {
+		parent := db.getNodeByParentID(n)
 
 		edge := int64(parent["rght"].(int))
 
@@ -31,6 +36,6 @@ func (db *Tree) CreateNode(n interface{}) error {
 		db.sync(n, 2, "+", cond)
 	}
 
-	err := db.Statement.Omit("id").Create(n).Error
+	err := sql.Create(n).Error
 	return err
 }
